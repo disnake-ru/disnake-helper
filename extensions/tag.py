@@ -1,7 +1,7 @@
 import disnake
 from disnake.ext import commands
 
-from core import DisnakeBot, TagCreate, TagNotFound, NoPerm, HelpButton
+from core import DisnakeBot, TagCreate, TagNotFound, NoPerm
 
 
 class Tags(commands.Cog):
@@ -69,12 +69,6 @@ class Tags(commands.Cog):
             raise TagNotFound(tag)
 
         await interaction.send(content=tag['content'])
-
-    @commands.slash_command(name='asd')
-    async def asd(self, interaction: disnake.CommandInteraction):
-        await interaction.response.defer(ephemeral=True)
-        message = await interaction.channel.fetch_message(1008434012106260490)
-        await message.edit(view=HelpButton(self.bot))
 
     @open.autocomplete("tag")
     async def tag_open(self, interaction: disnake.CommandInteraction, string: str):
