@@ -151,13 +151,11 @@ f'''
     @disnake.ui.button(label='Помощь disnake', style=disnake.ButtonStyle.grey, custom_id='disnake')
     async def disnake_n(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
         await interaction.response.defer(ephemeral=True)
-        print(1)
         await self.help(interaction, "disnake")
 
     @disnake.ui.button(label='Помощь python', style=disnake.ButtonStyle.grey, custom_id='python')
     async def python(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
         await interaction.response.defer(ephemeral=True)
-        print(2)
         await self.help(interaction, "python")
 
 
@@ -202,6 +200,6 @@ class CloseTread(disnake.ui.View):
         file.close()
 
         await channel.send(embed=embed, file=disnake.File(f"./logs/{interaction.author.id}.log"))
-        await interaction.channel.edit(archived=True, locked=True)
         await interaction.send("Ветка закрыта!")
+        await interaction.channel.edit(archived=True, locked=True)
         os.remove(f"./utils/{interaction.author.id}.log")
