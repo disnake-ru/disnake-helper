@@ -11,6 +11,7 @@ class Moderation(commands.Cog):
         self.bot: DisnakeBot = bot
 
     @commands.slash_command()
+    @commands.default_member_permissions(kick_members=True, ban_members=True)
     async def mod(self, interaction):
         ...
 
