@@ -58,15 +58,15 @@ class Tags(commands.Cog):
     async def open(
         self,
         interaction: disnake.CommandInteraction,
-        tag: str = commands.Param(
+        tag_name: str = commands.Param(
             description='Введите имя тега',
         )
     ):
         await interaction.response.defer()
-        tag = self.bot.database.get_tag(tag)
+        tag = self.bot.database.get_tag(tag_name)
 
         if not tag:
-            raise TagNotFound(tag)
+            raise TagNotFound(tag_name)
 
         await interaction.send(content=tag['content'])
 
