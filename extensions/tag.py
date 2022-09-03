@@ -72,7 +72,7 @@ class Tags(commands.Cog):
 
     @open.autocomplete("tag_name")
     async def tag_open(self, interaction: disnake.CommandInteraction, string: str):
-        collection = self.bot.get_guild_data()
+        collection = self.bot.database.get_guild_data()
         data = collection.find_one({"_id": "settings"})["tag_system"]
         message = []
 

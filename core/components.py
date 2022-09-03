@@ -62,6 +62,7 @@ class TagCreate(disnake.ui.Modal):
                 )
             ]
         )
+        await interaction.response.send_message('Ваш тег отправлен на проверку', ephemeral=True)
 
 
 class ButtonRoles(disnake.ui.View):
