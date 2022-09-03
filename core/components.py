@@ -180,26 +180,5 @@ class CloseTread(disnake.ui.View):
 
     @disnake.ui.button(label='Закрыть ветку', style=disnake.ButtonStyle.red, custom_id='close')
     async def close(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
-        file = open(f"./logs/{interaction.author.id}.log", "w+", encoding='utf-8')
-        channel = interaction.guild.get_channel(LogChannel.BRANCH)
-        embed = disnake.Embed(
-            title='Закрытие ветки',
-            description='**История чата:**',
-            color=Color.RED
-        )
-        message = []
-
-        async for msg in interaction.channel.history(limit=200):
-            if msg.author.bot:
-                continue
-            if msg.attachments:
-                message.append(f"{msg.author}: фото\n")
-            message.append(f"{msg.author}: {msg.clean_content}\n")
-        for x in message:
-            file.write(x)
-        file.close()
-
-        await channel.send(embed=embed, file=disnake.File(f"./logs/{interaction.author.id}.log"))
         await interaction.send("Ветка закрыта!")
         await interaction.channel.edit(archived=True, locked=True)
-        os.remove(f"./utils/{interaction.author.id}.log")
