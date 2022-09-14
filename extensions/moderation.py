@@ -3,7 +3,7 @@ import datetime
 import disnake
 from disnake.ext import commands
 
-from core import DisnakeBot, Color
+from core import DisnakeBot, Color, Roles
 
 
 class Moderation(commands.Cog):
@@ -110,6 +110,16 @@ class Moderation(commands.Cog):
         await interaction.channel.purge(limit=amount)
         await interaction.send("Готово")
 
+    @commands.slash_command(name='close-post', description='Закрыть вопрос')
+    async def close_post(self, interaction: disnake.CommandInteraction):
+        await interaction.response.defer(ephemeral=True)
+
+        if interaction.channel.owner.id != interaction.author.id or not interaction.author.guild_permissions.manage_messages:
+            return await interaction.send("У вас нету доступа!")
+
+        await interaction.channel.edit(locked=True, archived=True)
+        await interaction.channel.send("Пост закрыт!")
+        await interaction.send("Готово!")
 
 def setup(bot):
     bot.add_cog(Moderation(bot))

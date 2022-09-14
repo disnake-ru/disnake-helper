@@ -6,8 +6,6 @@ from core import (
     Color,
     ButtonRoles,
     LogChannel,
-    HelpButton,
-    CloseTread,
     NoPerm,
     TagNotFound
 )
@@ -38,8 +36,6 @@ class Listeners(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         self.bot.add_view(ButtonRoles(self.bot))
-        self.bot.add_view(HelpButton(self.bot))
-        self.bot.add_view(CloseTread(self.bot))
         print("Бот запущен")
 
     @commands.Cog.listener("on_member_join")
@@ -91,6 +87,26 @@ class Listeners(commands.Cog):
 
         await interaction.send(description)
 
+    @commands.Cog.listener()
+    async def on_thread_create(self, forum: disnake.Thread):
+        if forum.parent.id != 0000000000000:
+            return
+
+        channel = self.bot.get_channel(LogChannel.BRANCH)
+        embed = disnake.Embed(
+            title='Добро пожаловать',
+            description='**Чтобы закрыть пост используйте: </close-post:1238>**',
+            color=Color.GRAY
+        )
+        embed_support = disnake.Embed(
+            title=forum.name,
+            description=f'**Форум: {forum.mention}\nАвтор: {forum.owner.mention}**',
+            color=Color.GREEN
+        )
+
+        msg = await forum.send(embed=embed)
+        await msg.pin()
+        await channel.send(embed=embed_support)
 
 def setup(bot):
     bot.add_cog(Listeners(bot))
