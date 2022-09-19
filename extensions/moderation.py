@@ -117,6 +117,9 @@ class Moderation(commands.Cog):
         if interaction.channel.owner.id != interaction.author.id or not interaction.author.guild_permissions.manage_messages:
             return await interaction.send("У вас нету доступа!")
 
+        role = interaction.guild.get_role(Roles.HELP_ACTIVE)
+
+        await interaction.channel.owner.remove_roles(role, reason='Закрыл запрос помощи')
         await interaction.channel.edit(locked=True, archived=True)
         await interaction.channel.send("Пост закрыт!")
         await interaction.send("Готово!")

@@ -5,9 +5,10 @@ from core import (
     DisnakeBot,
     Color,
     ButtonRoles,
-    LogChannel,
+    DevChannels,
     NoPerm,
-    TagNotFound
+    TagNotFound,
+    Roles
 )
 
 
@@ -41,7 +42,7 @@ class Listeners(commands.Cog):
     @commands.Cog.listener("on_member_join")
     async def member_join(self, member: disnake.Member):
         invite: disnake.Invite = await self.invite.get_invite(member)
-        channel = self.bot.get_channel(LogChannel.ON_MEMBER_JOIN)
+        channel = self.bot.get_channel(DevChannels.ON_MEMBER_JOIN)
         embed = disnake.Embed(
             description=f'**Создан: <t:{int(member.joined_at.timestamp())}:F>)\nПригласил: {invite.inviter.mention}**',  # noqa: E501
             color=Color.GRAY
@@ -52,7 +53,7 @@ class Listeners(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message_delete(self, message: disnake.Message):
-        channel = self.bot.get_channel(LogChannel.MESSAGE_LOGS)
+        channel = self.bot.get_channel(DevChannels.MESSAGE_LOGS)
 
         if message.author.bot:
             return
@@ -70,11 +71,6 @@ class Listeners(commands.Cog):
         await channel.send(embed=embed)
 
     @commands.Cog.listener()
-    async def on_message(self, message: disnake.Message):
-        if message.channel.id == 1008412847488913518:
-            await message.delete()
-
-    @commands.Cog.listener()
     async def on_slash_command_error(self, interaction: disnake.CommandInteraction, error):
         error = getattr(error, "original", error)
 
@@ -89,13 +85,14 @@ class Listeners(commands.Cog):
 
     @commands.Cog.listener()
     async def on_thread_create(self, forum: disnake.Thread):
-        if forum.parent.id != 0000000000000:
+        if forum.parent.id != DevChannels.FORUM:
             return
 
-        channel = self.bot.get_channel(LogChannel.BRANCH)
+        channel = self.bot.get_channel(DevChannels.BRANCH)
+        role = forum.guild.get_role(Roles.HELP_ACTIVE)
         embed = disnake.Embed(
             title='Добро пожаловать',
-            description='**Чтобы закрыть пост используйте: </close-post:1238>**',
+            description='**Чтобы закрыть пост используйте: </close-post:1021401575106814013>**',
             color=Color.GRAY
         )
         embed_support = disnake.Embed(
@@ -105,8 +102,9 @@ class Listeners(commands.Cog):
         )
 
         msg = await forum.send(embed=embed)
-        await msg.pin()
+        await forum.owner.add_roles(role, reason="Открыл запрос на помощь/баг")
         await channel.send(embed=embed_support)
+        await msg.pin()
 
 def setup(bot):
     bot.add_cog(Listeners(bot))

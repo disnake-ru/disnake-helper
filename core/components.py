@@ -2,7 +2,7 @@ import os
 
 import disnake
 
-from . import DisnakeBot, LogChannel, Color, Roles
+from . import DisnakeBot, DevChannels, Color, Roles
 
 
 class TagCreate(disnake.ui.Modal):
@@ -30,7 +30,7 @@ class TagCreate(disnake.ui.Modal):
         )
 
     async def callback(self, interaction: disnake.ModalInteraction):
-        channel = interaction.guild.get_channel(LogChannel.MOD_LOG)
+        channel = interaction.guild.get_channel(DevChannels.MOD_LOG)
         modal = interaction.text_values
         tag = self.bot.database.check_tag(modal['name'])
 
