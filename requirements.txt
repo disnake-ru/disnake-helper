@@ -2,3 +2,4 @@ disnake
 certifi
 pymongo[srv]
 disnake-ext-invitetracker
+python-dotenv
