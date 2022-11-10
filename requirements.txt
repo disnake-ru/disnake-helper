@@ -1,0 +1,3 @@
+disnake
+certifi
+pymongo[srv]
