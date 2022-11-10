@@ -11,8 +11,7 @@ class DisnakeBot(commands.InteractionBot):
     def __init__(self, *args):
         super().__init__(
             intents=disnake.Intents.all(),
-            sync_commands_debug=True,
-            help_command=None,
+            sync_commands_debug=True
             *args
         )
         self.database = MongoDB()
