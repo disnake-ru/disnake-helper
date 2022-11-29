@@ -1,5 +1,5 @@
 import disnake
-from disnake.ext import commands, invitetracker
+from disnake.ext import commands
 
 from core import (
     DisnakeBot,
@@ -15,7 +15,6 @@ from core import (
 class Listeners(commands.Cog):
     def __init__(self, bot):
         self.bot: DisnakeBot = bot
-        self.invite = invitetracker.InviteLogger(bot)
 
     @commands.Cog.listener("on_button_click")
     async def button_click(self, interaction: disnake.MessageInteraction):
