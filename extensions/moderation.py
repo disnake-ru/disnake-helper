@@ -3,7 +3,7 @@ import datetime
 import disnake
 from disnake.ext import commands
 
-from core import DisnakeBot, Color
+from core import DisnakeBot, Color, Roles
 
 
 class Moderation(commands.Cog):
@@ -11,14 +11,14 @@ class Moderation(commands.Cog):
         self.bot: DisnakeBot = bot
 
     @commands.slash_command()
-    @commands.default_member_permissions(kick_members=True, ban_members=True)
     async def mod(self, interaction):
         ...
 
+    @commands.has_any_role(Roles.MODER, Roles.HELPER)
     @mod.sub_command(name='mute', description='Выдать мут человеку.')
     async def mute(
         self,
-        interaction: disnake.CommandInteraction,
+        interaction: disnake.GuildCommandInteraction,
         member: disnake.Member = commands.Param(
             description='Выберите пользователя'
         ),
@@ -46,10 +46,11 @@ class Moderation(commands.Cog):
         await interaction.channel.send(embed=embed)
         await interaction.send("Готово")
 
+    @commands.has_role(Roles.MODER)
     @mod.sub_command(name='ban', description='Выдать бан человеку.')
     async def ban(
         self,
-        interaction: disnake.CommandInteraction,
+        interaction: disnake.GuildCommandInteraction,
         member: disnake.Member = commands.Param(
             description='Выберите пользователя'
         ),
@@ -73,10 +74,11 @@ class Moderation(commands.Cog):
         await interaction.channel.send(embed=embed)
         await interaction.send("Готово")
 
+    @commands.has_role(Roles.MODER)
     @mod.sub_command(name='kick', description='Кикнуть человека.')
     async def kick(
         self,
-        interaction: disnake.CommandInteraction,
+        interaction: disnake.GuildCommandInteraction,
         member: disnake.Member = commands.Param(
             description='Выберите пользователя'
         ),
@@ -100,15 +102,19 @@ class Moderation(commands.Cog):
         await interaction.channel.send(embed=embed)
         await interaction.send("Готово")
 
-    @mod.sub_command(name='clear', description="Очистить сообщения в канале.")
-    async def clear(
-        self,
-        interaction: disnake.CommandInteraction,
-        amount: int
-    ):
+    @commands.slash_command(name='solved', description='Закрыть вопрос')
+    async def solved(self, interaction: disnake.GuildCommandInteraction):
         await interaction.response.defer(ephemeral=True)
-        await interaction.channel.purge(limit=amount)
-        await interaction.send("Готово")
+
+        if interaction.channel.owner.id != interaction.author.id or not interaction.author.guild_permissions.manage_messages:
+            return await interaction.send("У вас нету доступа!")
+
+        role = interaction.guild.get_role(Roles.HELP_ACTIVE)
+
+        await interaction.channel.owner.remove_roles(role, reason='Закрыл запрос помощи')
+        await interaction.channel.edit(locked=True, archived=True)
+        await interaction.channel.send("Пост закрыт!")
+        await interaction.send("Готово!")
 
 
 def setup(bot):

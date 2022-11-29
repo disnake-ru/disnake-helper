@@ -1,8 +1,6 @@
-import os
-
 import disnake
 
-from . import DisnakeBot, LogChannel, Color, Roles
+from . import DisnakeBot, DevChannels, Color
 
 
 class TagCreate(disnake.ui.Modal):
@@ -30,7 +28,7 @@ class TagCreate(disnake.ui.Modal):
         )
 
     async def callback(self, interaction: disnake.ModalInteraction):
-        channel = interaction.guild.get_channel(LogChannel.MOD_LOG)
+        channel = interaction.guild.get_channel(DevChannels.MOD_LOG)
         modal = interaction.text_values
         tag = self.bot.database.check_tag(modal['name'])
 
@@ -97,89 +95,3 @@ class ButtonRoles(disnake.ui.View):
     @disnake.ui.button(label='Голосования', custom_id='1008439902280630272')
     async def pull(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
         await self.interaction_click(button, interaction)
-
-
-class HelpButton(disnake.ui.View):
-    def __init__(self, bot):
-        super().__init__(timeout=None)
-        self.bot: DisnakeBot = bot
-
-    async def send_helper(
-        self,
-        interaction: disnake.CommandInteraction,
-        channel: disnake.TextChannel,
-        type: str
-    ):
-        channel = self.bot.get_channel(LogChannel.BRANCH)
-        embed = disnake.Embed(
-            title=f'Новый вопрос по {type}',
-            description=f'**Ветка: {channel.mention}\nАвтор: {interaction.author.mention}**',
-            color=Color.GREEN
-        )
-
-        await channel.send("<@&983286061222473728>", embed=embed)
-
-    async def help(
-        self,
-        interaction: disnake.MessageInteraction,
-        type: str
-    ):
-        channel = await interaction.channel.create_thread(
-            name=f'Помощь по {type} | {interaction.author}',
-            type=disnake.ChannelType.public_thread
-        )
-        embed = disnake.Embed(
-            title='Добро пожаловать',
-            description=
-f'''
-**Если вам нужна помощь по {type}, будьте добрый выполнить следующие вещи: **
-```
-1) Описать вашу проблему/вопрос
-2) Если это проблема, то отправить код и ошибку```
-''',
-            color=Color.GRAY
-        )
-
-        await self.send_helper(interaction, channel, type)
-        await interaction.send(channel.mention, ephemeral=True)
-        message = await channel.send(
-            interaction.author.mention,
-            embed=embed,
-            view=CloseTread(self.bot)
-        )
-        await message.pin()
-
-    @disnake.ui.button(label='Помощь disnake', style=disnake.ButtonStyle.grey, custom_id='disnake')
-    async def disnake_n(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
-        await interaction.response.defer(ephemeral=True)
-        await self.help(interaction, "disnake")
-
-    @disnake.ui.button(label='Помощь python', style=disnake.ButtonStyle.grey, custom_id='python')
-    async def python(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
-        await interaction.response.defer(ephemeral=True)
-        await self.help(interaction, "python")
-
-
-class CloseTread(disnake.ui.View):
-    def __init__(self, bot):
-        super().__init__(timeout=None)
-        self.bot: DisnakeBot = bot
-
-    async def get_thread_author(self, channel: disnake.Thread):
-        channel_history = channel.history(oldest_first=True, limit=1)
-        history = await channel_history.flatten()
-        member = history[0].mentions[0]
-        return member.id
-
-    async def interaction_check(self, interaction: disnake.MessageInteraction) -> bool:
-        thread_author = await self.get_thread_author(interaction.channel)
-        if interaction.user.id == thread_author or interaction.user.get_role(Roles.MODER) or interaction.user.get_role(Roles.HELPER):  # noqa: E501
-            return True
-        else:
-            await interaction.send("Вам нельзя закрыть ветку", ephemeral=True)
-            return False
-
-    @disnake.ui.button(label='Закрыть ветку', style=disnake.ButtonStyle.red, custom_id='close')
-    async def close(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
-        await interaction.send("Ветка закрыта!")
-        await interaction.channel.edit(archived=True, locked=True)
