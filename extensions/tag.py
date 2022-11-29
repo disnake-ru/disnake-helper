@@ -23,17 +23,17 @@ class Tags(commands.Cog):
         return [tag for tag in tags if user_input.lower() in tag]
 
     @commands.slash_command()
-    async def tag(self, interaction):
+    async def tag(self, interaction: disnake.GuildCommandInteraction):
         ...
 
     @tag.sub_command(name='create', description='Создать тег.')
-    async def create(self, interaction: disnake.CommandInteraction):
+    async def create(self, interaction: disnake.GuildCommandInteraction):
         await interaction.response.send_modal(TagCreate(self.bot))
 
     @tag.sub_command(name='delete', description='Удалить тег.')
     async def delete(
         self,
-        interaction: disnake.CommandInteraction,
+        interaction: disnake.GuildCommandInteraction,
         tag: str = commands.Param(
             description='Введите имя тега',
             autocomplete=edit_delete_tag
@@ -57,7 +57,7 @@ class Tags(commands.Cog):
     @tag.sub_command(name='open', description='Открыть тег.')
     async def open(
         self,
-        interaction: disnake.CommandInteraction,
+        interaction: disnake.GuildCommandInteraction,
         tag_name: str = commands.Param(
             description='Введите имя тега',
         )

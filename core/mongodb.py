@@ -18,7 +18,7 @@ class MongoDB:
     def get_guild_data(self):
         return self.connection["983119421214187520"]["settings"]
 
-    def check_tag(self, name: str):
+    def check_tag(self, name: str) -> bool | None:
         data = self.connection["983119421214187520"]["settings"].find_one(
             {'_id': 'settings'}
         )
@@ -29,7 +29,7 @@ class MongoDB:
         except KeyError:
             return True
 
-    def get_tag(self, name: str):
+    def get_tag(self, name: str) -> dict | None:
         data = self.connection["983119421214187520"]["settings"].find_one(
             {'_id': 'settings'}
         )

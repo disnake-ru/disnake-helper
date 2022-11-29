@@ -39,18 +39,6 @@ class Listeners(commands.Cog):
         self.bot.add_view(ButtonRoles(self.bot))
         print("Бот запущен")
 
-    @commands.Cog.listener("on_member_join")
-    async def member_join(self, member: disnake.Member):
-        invite: disnake.Invite = await self.invite.get_invite(member)
-        channel = self.bot.get_channel(DevChannels.ON_MEMBER_JOIN)
-        embed = disnake.Embed(
-            description=f'**Создан: <t:{int(member.joined_at.timestamp())}:F>)\nПригласил: {invite.inviter.mention}**',  # noqa: E501
-            color=Color.GRAY
-        )
-        embed.set_author(name=member, icon_url=member.avatar.url)
-
-        await channel.send(embed=embed)
-
     @commands.Cog.listener()
     async def on_message_delete(self, message: disnake.Message):
         channel = self.bot.get_channel(DevChannels.MESSAGE_LOGS)
@@ -85,25 +73,21 @@ class Listeners(commands.Cog):
 
     @commands.Cog.listener()
     async def on_thread_create(self, forum: disnake.Thread):
+        role = forum.guild.get_role(Roles.HELP_ACTIVE)
+
         if forum.parent.id != DevChannels.FORUM:
             return
-
-        channel = self.bot.get_channel(DevChannels.BRANCH)
-        role = forum.guild.get_role(Roles.HELP_ACTIVE)
+        if role in forum.owner.roles:
+            return forum.edit(locked=True, archived=True)
+            
         embed = disnake.Embed(
             title='Добро пожаловать',
             description='**Чтобы закрыть пост используйте: </close-post:1021401575106814013>**',
             color=Color.GRAY
         )
-        embed_support = disnake.Embed(
-            title=forum.name,
-            description=f'**Форум: {forum.mention}\nАвтор: {forum.owner.mention}**',
-            color=Color.GREEN
-        )
 
         msg = await forum.send(embed=embed)
         await forum.owner.add_roles(role, reason="Открыл запрос на помощь/баг")
-        await channel.send(embed=embed_support)
         await msg.pin()
 
 def setup(bot):

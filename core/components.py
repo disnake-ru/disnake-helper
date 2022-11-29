@@ -1,8 +1,6 @@
-import os
-
 import disnake
 
-from . import DisnakeBot, DevChannels, Color, Roles
+from . import DisnakeBot, DevChannels, Color
 
 
 class TagCreate(disnake.ui.Modal):
