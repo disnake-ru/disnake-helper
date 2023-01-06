@@ -45,13 +45,13 @@ class Listeners(commands.Cog):
         if message.author.bot:
             return
         if message.attachments:
-            message.content += "картинка"
+            message.content += "🖼 картинка"
         if not message.content:
-            message.content = "Нету"
+            message.content = "*🕳 Отсутствует*"
 
         embed = disnake.Embed(
             title=message.author,
-            description=f'**Удалил сообщение\nСообщение: \n```{message.content}```**',
+            description=f'**Удалил сообщение из {message.channel.mention}\nСообщение: \n```{message.content}```**',
             color=Color.GRAY
         )
 
@@ -62,11 +62,11 @@ class Listeners(commands.Cog):
         error = getattr(error, "original", error)
 
         if isinstance(error, NoPerm):
-            description = "У вас нету доступа"
+            description = "✋ У вас нет доступа"
         elif isinstance(error, TagNotFound):
-            description = f"Тег {error} не найден!"
+            description = f"👀 Тег {error} не найден!"
         else:
-            description = "Ошибка!"
+            description = "⚠ Ошибка!"
 
         await interaction.send(description)
 
@@ -81,7 +81,7 @@ class Listeners(commands.Cog):
             
         embed = disnake.Embed(
             title='Добро пожаловать',
-            description='**Чтобы закрыть пост используйте: </close-post:1021401575106814013>**',
+            description='**Воспользуйтесь </solved:1047221256354812026> для закрытия поста, если ропрос решён.**',
             color=Color.GRAY
         )
 
