@@ -47,11 +47,11 @@ class Listeners(commands.Cog):
         if message.attachments:
             message.content += "картинка"
         if not message.content:
-            message.content = "Нету"
+            message.content = "*🕳 Отсутствует*"
 
         embed = disnake.Embed(
             title=message.author,
-            description=f'**Удалил сообщение\nСообщение: \n```{message.content}```**',
+            description=f'**Удалил сообщение из {message.channel.mention}\nСообщение: \n```{message.content}```**',
             color=Color.GRAY
         )
 
@@ -62,11 +62,11 @@ class Listeners(commands.Cog):
         error = getattr(error, "original", error)
 
         if isinstance(error, NoPerm):
-            description = "У вас нету доступа"
+            description = "✋ У вас нету доступа"
         elif isinstance(error, TagNotFound):
-            description = f"Тег {error} не найден!"
+            description = f"👀 Тег {error} не найден!"
         else:
-            description = "Ошибка!"
+            description = "⚠ Ошибка!"
 
         await interaction.send(description)
 
@@ -80,10 +80,15 @@ class Listeners(commands.Cog):
             return forum.edit(locked=True, archived=True)
             
         embed = disnake.Embed(
-            title='Добро пожаловать',
-            description='**Чтобы закрыть пост используйте: </close-post:1021401575106814013>**',
+            title='Добро пожаловать в свой пост',
+            description='**Если вопрос решён, то воспользуйтесь </solved:1047221256354812026>.**',
             color=Color.GRAY
         )
+        #  Хотел в дескрипшн написать предупреждение. Вот только какое?..
+        #  embed.add_field(
+        #      name="Напоминание:",
+        #      value='**Если вопрос решён, то воспользуйтесь </solved:1047221256354812026>.**'
+        #  )
 
         msg = await forum.send(embed=embed)
         await forum.owner.add_roles(role, reason="Открыл запрос на помощь/баг")
