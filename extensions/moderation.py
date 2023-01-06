@@ -104,10 +104,13 @@ class Moderation(commands.Cog):
 
     @commands.slash_command(name='solved', description='Закрыть вопрос')
     async def solved(self, interaction: disnake.GuildCommandInteraction):
+        if interaction.channel.parent_id != 1047188206472400958:
+            return await interaction.send("❌ Нельзя закрыть не пост!", ephemeral=True)
+        
         await interaction.response.defer(ephemeral=True)
 
         if interaction.channel.owner.id != interaction.author.id or not interaction.author.guild_permissions.manage_messages:
-            return await interaction.send("У вас нету доступа!")
+            return await interaction.send("✋ У вас нет доступа к закрытию этого поста!")
 
         role = interaction.guild.get_role(Roles.HELP_ACTIVE)
 
