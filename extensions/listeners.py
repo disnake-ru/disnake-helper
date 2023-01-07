@@ -69,7 +69,6 @@ class Listeners(commands.Cog):
         else:
             description = "⚠ Ошибка!"
 
-
         await interaction.send(description, ephemeral=True)
 
     @commands.Cog.listener()
@@ -86,6 +85,11 @@ class Listeners(commands.Cog):
             description='**Воспользуйтесь </solved:1047221256354812026> для закрытия поста, если ропрос решён.**',
             color=Color.GRAY
         )
+        #  Хотел в дескрипшн написать предупреждение. Вот только какое?..
+        #  embed.add_field(
+        #      name="Напоминание:",
+        #      value='**Если вопрос решён, то воспользуйтесь </solved:1047221256354812026>.**'
+        #  )
 
         msg = await forum.send(embed=embed)
         await forum.owner.add_roles(role, reason="Открыл запрос на помощь/баг")
