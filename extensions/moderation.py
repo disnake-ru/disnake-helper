@@ -160,6 +160,7 @@ class Moderation(commands.Cog):
             key="POST_SOLVED_DESCR"
         )
     )
+
     async def solved(self, interaction: disnake.GuildCommandInteraction):
         if interaction.channel.parent_id is None:  # != DevChannels.FORUM:
             return await interaction.send("❌ Нельзя закрыть не пост!", ephemeral=True)
@@ -169,11 +170,13 @@ class Moderation(commands.Cog):
         if interaction.channel.owner.id != interaction.author.id or not interaction.author.guild_permissions.manage_threads:
             return await interaction.send("✋ У вас нет доступа к закрытию этого поста!")
 
+        post: disnake.Thread = interaction.channel
         role = interaction.guild.get_role(Roles.HELP_ACTIVE)
-
-        await interaction.channel.owner.remove_roles(role, reason='Закрыл запрос помощи')
-        await interaction.channel.edit(locked=True, archived=True)
-        await interaction.channel.send("Пост закрыт!")
+        tag = post.get_tag_by_name("Тест")
+        await post.owner.remove_roles(role, reason='Закрыл запрос помощи')
+        await post.send("Пост закрыт!")
+        await post.add_tags(tag)
+        await post.edit(locked=True, archived=True)
         await interaction.send("Готово!")
 
 def setup(bot):
