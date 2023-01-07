@@ -166,7 +166,7 @@ class Moderation(commands.Cog):
         
         await interaction.response.defer(ephemeral=True)
 
-        if interaction.channel.owner.id != interaction.author.id and not interaction.author.guild_permissions.manage_threads:
+        if interaction.channel.owner.id != interaction.author.id or not interaction.author.guild_permissions.manage_threads:
             return await interaction.send("✋ У вас нет доступа к закрытию этого поста!")
 
         role = interaction.guild.get_role(Roles.HELP_ACTIVE)
