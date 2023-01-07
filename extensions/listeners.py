@@ -1,5 +1,6 @@
 import disnake
 from disnake.ext import commands
+from loguru import logger
 
 from core import (
     DisnakeBot,
@@ -36,7 +37,7 @@ class Listeners(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         self.bot.add_view(ButtonRoles(self.bot))
-        print("Бот запущен")
+        logger.success(f"Бот запущен успешно с аккаунта {self.bot}")
 
     @commands.Cog.listener()
     async def on_message_delete(self, message: disnake.Message):
@@ -68,7 +69,8 @@ class Listeners(commands.Cog):
         else:
             description = "⚠ Ошибка!"
 
-        await interaction.send(description)
+
+        await interaction.send(description, ephemeral=True)
 
     @commands.Cog.listener()
     async def on_thread_create(self, forum: disnake.Thread):
