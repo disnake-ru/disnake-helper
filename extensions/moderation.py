@@ -172,7 +172,7 @@ class Moderation(commands.Cog):
 
         post: disnake.Thread = interaction.channel
         role = interaction.guild.get_role(Roles.HELP_ACTIVE)
-        tag = post.get_tag_by_name("Тест")
+        tag = post.parent.get_tag_by_name("Решено")
         await post.owner.remove_roles(role, reason='Закрыл запрос помощи')
         await post.send("Пост закрыт!")
         await post.add_tags(tag)
