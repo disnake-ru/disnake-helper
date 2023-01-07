@@ -63,7 +63,6 @@ class Tags(commands.Cog):
 
         await interaction.send("Вы успешно удалили тег")
 
-    # @open.autocomplete("tagname")
     async def tag_open_autocomp(interaction: disnake.CommandInteraction, string: str):
         collection = interaction.bot.database.get_guild_data()
         data = collection.find_one({"_id": "settings"})["tag_system"]

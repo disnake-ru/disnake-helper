@@ -36,9 +36,6 @@ class Moderation(commands.Cog):
             description=disnake.Localized("Provide the reason", key="WHY"),
             default='Not provided | Не указана'
         ),
-        # days: commands.Range[0, 28] = 0,
-        # hours: commands.Range[0, 23] = 0,
-        # minutes: commands.Range[0, 59] = 0,
         days: int = commands.Param(
             name=disnake.Localized("days", key="MUTE_DAYS"),
             description=disnake.Localized("Amount of days of punishment", key="MUTE_DAYS_DESCR"),
@@ -162,7 +159,7 @@ class Moderation(commands.Cog):
     )
 
     async def solved(self, interaction: disnake.GuildCommandInteraction):
-        if interaction.channel.parent_id is None:  # != DevChannels.FORUM:
+        if interaction.channel.parent_id is None:
             return await interaction.send("❌ Нельзя закрыть не пост!", ephemeral=True)
         
         await interaction.response.defer(ephemeral=True)
