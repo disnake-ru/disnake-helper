@@ -82,7 +82,7 @@ class Listeners(commands.Cog):
             
         embed = disnake.Embed(
             title='Добро пожаловать',
-            description='**Воспользуйтесь </solved:1047221256354812026> для закрытия поста, если ропрос решён.**',
+            description='**Воспользуйтесь </solved:1047221256354812026> для закрытия поста, если вопрос решён.**',
             color=Color.GRAY
         )
 
