@@ -98,7 +98,7 @@ class Moderation(commands.Cog):
         await interaction.response.defer(ephemeral=True)
         embed = disnake.Embed(
             title='Ссылка пользователя в ГУЛАГ',
-            description=f"*Пользователь {member.mention} предстал перед **Советским Союзом** по побвинению в покушении на **Сталина**...*",
+            description=f"*Пользователь {member.mention} предстал перед **Советским Союзом** по обвинению в покушении на **Сталина**...*",
             color=Color.GRAY
         )
         embed.set_author(
