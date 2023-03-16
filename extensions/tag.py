@@ -93,5 +93,6 @@ class Tags(commands.Cog):
 
         await interaction.send(content=tag['content'])
 
+
 def setup(bot):
     bot.add_cog(Tags(bot))

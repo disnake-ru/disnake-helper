@@ -1,4 +1,4 @@
-from .disnake_bot import *
+from .disnakebot import *
 from .enums import *
 from .mongodb import *
 from .components import *

@@ -3,7 +3,7 @@ import datetime
 import disnake
 from disnake.ext import commands
 
-from core import DisnakeBot, Color, Roles, DevChannels
+from core import DisnakeBot, Color, Roles
 
 
 class Moderation(commands.Cog):
@@ -98,7 +98,7 @@ class Moderation(commands.Cog):
         await interaction.response.defer(ephemeral=True)
         embed = disnake.Embed(
             title='Ссылка пользователя в ГУЛАГ',
-            description=f"*Пользователь {member.mention} предстал перед **Советским Союзом** по побвинению в покушении на **Сталина**...*",
+            description=f"*Пользователь {member.mention} предстал перед **Советским Союзом** по обвинению в покушении на **Сталина**...*",
             color=Color.GRAY
         )
         embed.set_author(
@@ -106,7 +106,7 @@ class Moderation(commands.Cog):
             icon_url=member.avatar.url
         )
         embed.add_field(
-            name=f'Причина ссылки:',
+            name='Причина ссылки:',
             value=reason if reason != "Not provided | Не указана" else "*История умалчивает...*"
         )
 
@@ -157,11 +157,10 @@ class Moderation(commands.Cog):
             key="POST_SOLVED_DESCR"
         )
     )
-
     async def solved(self, interaction: disnake.GuildCommandInteraction):
         if interaction.channel.parent_id is None:
             return await interaction.send("❌ Нельзя закрыть не пост!", ephemeral=True)
-        
+
         await interaction.response.defer(ephemeral=True)
 
         if interaction.channel.owner.id != interaction.author.id and not interaction.author.guild_permissions.manage_threads:
@@ -170,11 +169,13 @@ class Moderation(commands.Cog):
         post: disnake.Thread = interaction.channel
         role = interaction.guild.get_role(Roles.HELP_ACTIVE)
         tag = post.parent.get_tag_by_name("Решено")
+
         await post.owner.remove_roles(role, reason='Закрыл запрос помощи')
         await post.send("Пост закрыт!")
         await post.add_tags(tag)
         await post.edit(locked=True, archived=True)
         await interaction.send("Готово!")
+
 
 def setup(bot):
     bot.add_cog(Moderation(bot))

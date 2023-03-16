@@ -8,13 +8,10 @@ from .mongodb import MongoDB
 
 
 class DisnakeBot(commands.InteractionBot):
-    def __init__(self, *args):
+    def __init__(self):
         super().__init__(
-            intents=disnake.Intents.all(),
-            sync_commands_debug=True,
-            *args
+            intents=disnake.Intents.all()
         )
-        self.database = MongoDB()
 
     def load_extensions(self):
         for filename in os.listdir("./extensions"):
